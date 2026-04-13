@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk Consent Test — Site 2</title>
+  <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js"
+    data-cbid="REPLACE_WITH_YOUR_CBID"
+    data-blockingmode="auto" type="text/javascript"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 860px; margin: 40px auto; padding: 20px; background: #f8fafc; color: #1e293b; }
+    h1 { margin: 0 0 4px; }
+    .subtitle { color: #64748b; margin-bottom: 24px; font-size: 14px; }
+    .site-badge { background: #7c3aed; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; display: inline-block; margin-bottom: 12px; }
+    .card { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 10px; margin: 14px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card h3 { margin: 0 0 14px; font-size: 15px; color: #374151; }
+    .consent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .consent-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; }
+    .dot { width: 14px; height: 14px; border-radius: 50%; background: #cbd5e1; flex-shrink: 0; transition: background 0.3s; }
+    .dot.granted { background: #10b981; box-shadow: 0 0 0 3px #d1fae5; }
+    .dot.denied { background: #ef4444; box-shadow: 0 0 0 3px #fee2e2; }
+    .dot.always { background: #6366f1; box-shadow: 0 0 0 3px #e0e7ff; }
+    .consent-label { font-size: 14px; font-weight: 500; }
+    .consent-value { font-size: 12px; color: #64748b; margin-left: auto; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+    button { background: #7c3aed; color: white; border: none; padding: 9px 18px; border-radius: 7px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background 0.2s; }
+    button:hover { background: #6d28d9; }
+    button.secondary { background: #6b7280; }
+    button.secondary:hover { background: #4b5563; }
+    button.danger { background: #ef4444; }
+    button.danger:hover { background: #dc2626; }
+    .nav-btn { display: inline-flex; align-items: center; gap: 6px; background: #0f172a; color: white; padding: 9px 18px; border-radius: 7px; text-decoration: none; font-size: 14px; font-weight: 500; transition: background 0.2s; }
+    .nav-btn:hover { background: #1e293b; }
+    .debug-box { background: #0f172a; color: #a5f3fc; padding: 14px; border-radius: 8px; font-family: 'Menlo', 'Monaco', monospace; font-size: 12px; white-space: pre-wrap; word-break: break-all; max-height: 240px; overflow-y: auto; line-height: 1.6; }
+    .check-list { display: flex; flex-direction: column; gap: 8px; }
+    .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 14px; line-height: 1.5; }
+    .check-num { background: #7c3aed; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; margin-top: 1px; }
+    #status-time { font-size: 12px; color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <span class="site-badge">SITE 2</span>
+  <h1>Bulk Consent Test</h1>
+  <p class="subtitle">EUD-5533 — This is the receiving domain. Check if consent was correctly transferred from Site 1.</p>
+
+  <div class="card">
+    <h3>Current Consent State <span id="status-time"></span></h3>
+    <div class="consent-grid">
+      <div class="consent-item">
+        <span class="dot always" id="dot-necessary"></span>
+        <span class="consent-label">Necessary</span>
+        <span class="consent-value">always on</span>
+      </div>
+      <div class="consent-item">
+        <span class="dot" id="dot-preferences"></span>
+        <span class="consent-label">Preferences</span>
+        <span class="consent-value" id="val-preferences">—</span>
+      </div>
+      <div class="consent-item">
+        <span class="dot" id="dot-statistics"></span>
+        <span class="consent-label">Statistics</span>
+        <span class="consent-value" id="val-statistics">—</span>
+      </div>
+      <div class="consent-item">
+        <span class="dot" id="dot-marketing"></span>
+        <span class="consent-label">Marketing</span>
+        <span class="consent-value" id="val-marketing">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button onclick="Cookiebot.renew()">Open Consent Dialog</button>
+    <button class="secondary" onclick="updateStatus()">Refresh Status</button>
+    <a class="nav-btn" href="https://site1.REPLACE_WITH_YOUR_DOMAIN">← Go to Site 1</a>
+  </div>
+
+  <div class="card">
+    <h3>localStorage: CookieConsentBulkSetting-{CBID}</h3>
+    <div class="debug-box" id="bulk-debug">Waiting for Cookiebot...</div>
+    <div class="actions" style="margin-top: 12px; margin-bottom: 0;">
+      <button class="secondary" onclick="refreshDebug()">Refresh</button>
+      <button class="danger" onclick="clearBulk()">Clear BulkSetting</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What to check on this site</h3>
+    <div class="check-list">
+      <div class="check-item">
+        <span class="check-num">1</span>
+        <span>After <strong>Accept All on Site 1</strong>: all 3 categories should be granted here (Preferences, Statistics, Marketing)</span>
+      </div>
+      <div class="check-item">
+        <span class="check-num">2</span>
+        <span>After <strong>Decline All on Site 1</strong>: consent should now be declined here too <em>(was broken before EUD-5533 fix)</em></span>
+      </div>
+      <div class="check-item">
+        <span class="check-num">3</span>
+        <span>After <strong>removing only Preferences on Site 1</strong>: consent state here must be updated <em>(was broken before fix)</em></span>
+      </div>
+      <div class="check-item">
+        <span class="check-num">4</span>
+        <span>After <strong>removing only Statistics on Site 1</strong>: consent here must <strong>remain unchanged</strong> (by design)</span>
+      </div>
+      <div class="check-item">
+        <span class="check-num">5</span>
+        <span>After <strong>removing only Marketing on Site 1</strong>: consent here must <strong>remain unchanged</strong> (by design)</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CBID = document.getElementById('Cookiebot').dataset.cbid;
+
+    function updateStatus() {
+      const cc = window.Cookiebot;
+      if (!cc || !cc.consent) {
+        setTimeout(updateStatus, 300);
+        return;
+      }
+
+      const setConsent = (key, val) => {
+        const dot = document.getElementById('dot-' + key);
+        const label = document.getElementById('val-' + key);
+        dot.className = 'dot ' + (val === true ? 'granted' : val === false ? 'denied' : '');
+        label.textContent = val === true ? 'granted' : val === false ? 'denied' : '(unknown)';
+      };
+
+      document.getElementById('dot-necessary').className = 'dot always';
+      setConsent('preferences', cc.consent.preferences);
+      setConsent('statistics', cc.consent.statistics);
+      setConsent('marketing', cc.consent.marketing);
+
+      const now = new Date();
+      document.getElementById('status-time').textContent =
+        '(updated ' + now.toLocaleTimeString() + ')';
+
+      refreshDebug();
+    }
+
+    function refreshDebug() {
+      const raw = localStorage.getItem('CookieConsentBulkSetting-' + CBID);
+      const el = document.getElementById('bulk-debug');
+      if (!raw) {
+        el.textContent = '(not set — bulk consent not active or CBID mismatch)';
+        return;
+      }
+      try {
+        el.textContent = JSON.stringify(JSON.parse(raw), null, 2);
+      } catch {
+        el.textContent = raw;
+      }
+    }
+
+    function clearBulk() {
+      localStorage.removeItem('CookieConsentBulkSetting-' + CBID);
+      document.getElementById('bulk-debug').textContent = '(cleared)';
+    }
+
+    window.addEventListener('CookiebotOnConsentReady', updateStatus);
+    window.addEventListener('CookiebotOnAccept', updateStatus);
+    window.addEventListener('CookiebotOnDecline', updateStatus);
+    window.addEventListener('CookiebotOnLoad', updateStatus);
+    updateStatus();
+  </script>
+</body>
+</html>
